@@ -96,6 +96,7 @@ class MathQuizApp:
             question, self.correct_answer = generate_question(self.level.get())  # Generate a new question
             self.question_label.config(text=f"Question {self.current_question}: {question}")  # Update question label
             self.feedback_label.config(text="")  # Clear previous feedback
+            self.answer_entry.delete(0, tk.END)  # Clear the answer entry for the new question
         else:
             self.end_quiz()  # If no more questions, end the quiz
 
@@ -108,4 +109,21 @@ class MathQuizApp:
                 self.feedback_label.config(text="Correct!", fg="green")  # Correct answer
                 self.score += 1  # Increase the score
             else:
-   
+                self.feedback_label.config(text=f"Incorrect! The correct answer was {self.correct_answer}.", fg="red")  # Incorrect answer
+            self.score_label.config(text=f"Score: {self.score}/{self.current_question}")  # Update the score display
+            self.ask_question()  # Ask the next question
+        except ValueError:
+            messagebox.showerror("Invalid input", "Please enter a valid number.")  # Handle invalid input
+
+    # End the quiz and display the final score
+    def end_quiz(self):
+        self.question_label.config(text="Quiz Over!")  # Update the question label to indicate the end
+        self.answer_entry.config(state='disabled')  # Disable the answer entry box
+        self.submit_button.config(state='disabled')  # Disable the submit button
+        self.feedback_label.config(text=f"Your final score is {self.score}/{self.num_questions}.")  # Show final score
+
+# Entry point for running the application
+if __name__ == "__main__":
+    root = tk.Tk()  # Create the main application window
+    app = MathQuizApp(root)  # Initialize the MathQuizApp with the root window
+    root.mainloop()  # Start the Tkinter event loop
